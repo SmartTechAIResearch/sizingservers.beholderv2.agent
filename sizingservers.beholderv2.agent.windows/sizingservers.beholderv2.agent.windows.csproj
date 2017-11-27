@@ -44,9 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RetrieverProxy.cs" />
+    <Compile Include="PayloadRetreiver.cs" />
+    <Compile Include="Retrievers\BaseBoard.cs" />
+    <Compile Include="Retrievers\CPU.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SystemInformationRetreiver.cs" />
+    <Compile Include="Retrievers\Disk.cs" />
+    <Compile Include="Retrievers\Machine.cs" />
+    <Compile Include="Retrievers\NIC.cs" />
+    <Compile Include="Retrievers\RAM.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
