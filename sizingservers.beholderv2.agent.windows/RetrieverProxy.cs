@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Management;
 
-namespace sizingservers.beholder.agent.windows {
+namespace sizingservers.beholderv2.agent.windows {
     /// <summary>
     /// Caches the ManagementScopes.
     /// </summary>

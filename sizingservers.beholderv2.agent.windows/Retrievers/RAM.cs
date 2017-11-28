@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Management;
 
-namespace sizingservers.beholder.agent.windows {
+namespace sizingservers.beholderv2.agent.windows {
     internal class RAM : IPayloadRetriever {
         public static RAM _instance = new RAM();
 
@@ -10,7 +10,7 @@ namespace sizingservers.beholder.agent.windows {
 
         private RAM() { }
 
-        public IEnumerable<ComponentGroup> Retreive() {
+        public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
             ManagementObjectCollection col = RetrieverProxy.GetInfo("Select * from Win32_PhysicalMemory");

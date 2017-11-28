@@ -14,27 +14,27 @@ using System.Linq;
 
 namespace sizingservers.beholderv2.agent.shared {
     /// <summary>
-    /// Reports system information. It uses the info from Config. You need to register a retreiver.
+    /// Reports system information. It uses the info from Config. You need to register a retriever.
     /// </summary>
     public static class PayloadReporter {
         private static Timer _reportTimer;
-        private static IPayloadRetriever _retreiver;
+        private static IPayloadRetriever _retriever;
 
         private static HttpClient _httpClient = new HttpClient();
 
-        public static void RegisterRetreiverAndStartReporting(IPayloadRetriever retreiver) {
-            _retreiver = retreiver;
+        public static void RegisterRetrieverAndStartReporting(IPayloadRetriever retriever) {
+            _retriever = retriever;
             _reportTimer = new Timer(_reportTimer_Callback, null, 0, Config.GetInstance().reportEveryXMinutes * 60 * 1000);
         }
         async static void _reportTimer_Callback(object state) {
             try {
-                if (_retreiver == null) return;
+                if (_retriever == null) return;
 
                 ComponentGroup[] report = null;
 
                 for (int i = 0; ;)
                     try {
-                        report = _retreiver.Retrieve().ToArray();
+                        report = _retriever.Retrieve().ToArray();
                         break;
                     }
                     catch {

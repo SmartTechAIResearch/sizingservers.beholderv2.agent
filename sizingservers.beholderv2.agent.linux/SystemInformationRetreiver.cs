@@ -28,7 +28,7 @@ namespace sizingservers.beholderv2.agent.linux {
         }
 
         public static SystemInformationRetreiver GetInstance() { return _instance; }
-        public SystemInformation Retreive() {
+        public SystemInformation Retrieve() {
             var sysinfo = new SystemInformation();
             var startInfo = new ProcessStartInfo("'" + _inxiPath + "' -SCDMNm -xi -c 0 > '" + _tempPath + "'") {
                 UseShellExecute = true

@@ -6,6 +6,6 @@
 
 namespace sizingservers.beholderv2.agent.shared {
     public interface ISystemInformationRetreiver {
-        SystemInformation Retreive();
+        SystemInformation Retrieve();
     }
 }

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{82460D8D-519C-4D1F-99E7-A938A2987C68}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>sizingservers.beholder.agent.windows</RootNamespace>
-    <AssemblyName>sizingservers.beholder.agent.windows</AssemblyName>
+    <RootNamespace>sizingservers.beholderv2.agent.windows</RootNamespace>
+    <AssemblyName>sizingservers.beholderv2.agent.windows</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RetrieverProxy.cs" />
-    <Compile Include="PayloadRetreiver.cs" />
+    <Compile Include="PayloadRetriever.cs" />
     <Compile Include="Retrievers\BaseBoard.cs" />
     <Compile Include="Retrievers\CPU.cs" />
     <Compile Include="Program.cs" />

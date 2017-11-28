@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 
-namespace sizingservers.beholder.agent.windows {
+namespace sizingservers.beholderv2.agent.windows {
     internal class Machine : IPayloadRetriever {
         public static Machine _instance = new Machine();
 
@@ -11,7 +11,7 @@ namespace sizingservers.beholder.agent.windows {
 
         private Machine() { }
 
-        public IEnumerable<ComponentGroup> Retreive() {
+        public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new ComponentGroup[] { new ComponentGroup("Machine") };
 
             var properties = new HashSet<PayloadProperty>();
@@ -19,7 +19,6 @@ namespace sizingservers.beholder.agent.windows {
             ManagementObjectCollection col = RetrieverProxy.GetInfo("Select CSName, Domain, Manufacturer, Model from Win32_ComputerSystem");
             foreach (ManagementObject mo in col) {
                 properties.Add(new PayloadProperty("Hostname", mo["CSName"] + "." + mo["Domain"]));
-                properties.Add(new PayloadProperty("System", mo["Manufacturer"] + " - " + mo["Model"]));
             }
 
             col = RetrieverProxy.GetInfo("Select IPAddress from Win32_NetworkAdapterConfiguration where IPEnabled='True'");

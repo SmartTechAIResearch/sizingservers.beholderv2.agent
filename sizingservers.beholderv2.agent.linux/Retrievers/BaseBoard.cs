@@ -1,9 +1,8 @@
 ﻿using sizingservers.beholderv2.agent.shared;
 using System.Collections.Generic;
 using System.Linq;
-using System.Management;
 
-namespace sizingservers.beholder.agent.linux {
+namespace sizingservers.beholderv2.agent.linux {
     internal class BaseBoard : IPayloadRetriever {
         public static BaseBoard _instance = new BaseBoard();
 
@@ -16,16 +15,11 @@ namespace sizingservers.beholder.agent.linux {
 
             var properties = new HashSet<PayloadProperty>();
 
-            ManagementObjectCollection col = RetreiverProxy.GetInfo("Select Name from Win32_BaseBoard");
-            foreach (ManagementObject mo in col) {
-                properties.Add(new PayloadProperty("Manufacturer", mo["Manufacturer"]));
-                properties.Add(new PayloadProperty("Model", mo["Model"]));
-                properties.Add(new PayloadProperty("Product", mo["Product"]));
-                properties.Add(new PayloadProperty("PartNumber", mo["PartNumber"]));
-            }
-            col = RetreiverProxy.GetInfo("Select Name from Win32_BIOS WHERE PrimaryBIOS='True'");
-            foreach (ManagementObject mo in col)
-                properties.Add(new PayloadProperty("BIOS", mo["Name"]));
+
+            Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("M")["Machine"];
+            properties.Add(new PayloadProperty("Manufacturer", col.GetValueOrDefault("Mobo")));
+            properties.Add(new PayloadProperty("Model", col.GetValueOrDefault("Mobo model")));
+            properties.Add(new PayloadProperty("BIOS", col.GetValueOrDefault("Bios v")));
 
             cgs[0].Properties = properties.ToArray();
 

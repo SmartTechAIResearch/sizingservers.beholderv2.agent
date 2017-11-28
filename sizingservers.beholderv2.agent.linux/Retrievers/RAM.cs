@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Management;
 
-namespace sizingservers.beholder.agent.linux {
+namespace sizingservers.beholderv2.agent.linux {
     internal class RAM : IPayloadRetriever {
         public static RAM _instance = new RAM();
 

@@ -1,13 +1,13 @@
 ﻿using sizingservers.beholderv2.agent.shared;
 using System.Collections.Generic;
 
-namespace sizingservers.beholder.agent.linux {
-    internal class PayloadRetreiver : IPayloadRetriever {
-        public static PayloadRetreiver _instance = new PayloadRetreiver();
+namespace sizingservers.beholderv2.agent.windows {
+    internal class PayloadRetriever : IPayloadRetriever {
+        public static PayloadRetriever _instance = new PayloadRetriever();
 
-        public static PayloadRetreiver GetInstance() { return _instance; }
+        public static PayloadRetriever GetInstance() { return _instance; }
 
-        private PayloadRetreiver() { }
+        private PayloadRetriever() { }
 
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new List<ComponentGroup>();

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Management;
 
-namespace sizingservers.beholder.agent.windows {
+namespace sizingservers.beholderv2.agent.windows {
     internal class NIC : IPayloadRetriever {
         public static NIC _instance = new NIC();
 
@@ -10,7 +10,7 @@ namespace sizingservers.beholder.agent.windows {
 
         private NIC() { }
 
-        public IEnumerable<ComponentGroup> Retreive() {
+        public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
             ManagementObjectCollection col = 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Management;
 
-namespace sizingservers.beholder.agent.linux {
+namespace sizingservers.beholderv2.agent.linux {
     internal class NIC : IPayloadRetriever {
         public static NIC _instance = new NIC();
 

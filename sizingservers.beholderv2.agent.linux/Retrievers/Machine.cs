@@ -1,9 +1,8 @@
 ﻿using sizingservers.beholderv2.agent.shared;
 using System.Collections.Generic;
 using System.Linq;
-using System.Management;
 
-namespace sizingservers.beholder.agent.linux {
+namespace sizingservers.beholderv2.agent.linux {
     internal class Machine : IPayloadRetriever {
         public static Machine _instance = new Machine();
 
@@ -16,24 +15,19 @@ namespace sizingservers.beholder.agent.linux {
 
             var properties = new HashSet<PayloadProperty>();
 
-            ManagementObjectCollection col = RetreiverProxy.GetInfo("Select CSName, Domain, Manufacturer, Model from Win32_ComputerSystem");
-            foreach (ManagementObject mo in col) {
-                properties.Add(new PayloadProperty("Hostname", mo["CSName"] + "." + mo["Domain"]));
-                properties.Add(new PayloadProperty("System", mo["Manufacturer"] + " - " + mo["Model"]));
-            }
+            Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("-S")["System"];
+            properties.Add(new PayloadProperty("Hostname", col.GetValueOrDefault("Host") + "." + RetrieverProxy.GetDnsDomainName()));
+            properties.Add(new PayloadProperty("OS", col.GetValueOrDefault("Distro") + " Kernel " + col.GetValueOrDefault("Kernel")));
 
-            col = RetreiverProxy.GetInfo("Select IPAddress from Win32_NetworkAdapterConfiguration where IPEnabled='True'");
+            col = RetrieverProxy.GetInxiInfo("-xi")["Network"];
+            
             var ips = new List<string>();
-            foreach (ManagementObject mo in col)
-                foreach (string ip in mo["IPAddress"] as string[]) ips.Add(ip);
+            foreach (string key in col.Keys)
+                if (key.Contains("ip-v"))
+                    ips.Add(col[key]);
 
             properties.Add(new PayloadProperty("IPs", ips));
 
-            col = RetreiverProxy.GetInfo("Select Version, Name, BuildNumber from Win32_OperatingSystem");
-            foreach (ManagementObject mo in col) {
-                properties.Add(new PayloadProperty("OS",
-                    string.Format("{0} {1} Build {2}", mo["Name"].ToString().Split("|".ToCharArray())[0], mo["Version"], mo["BuildNumber"])));
-            }
             cgs[0].Properties = properties.ToArray();
 
             return cgs;

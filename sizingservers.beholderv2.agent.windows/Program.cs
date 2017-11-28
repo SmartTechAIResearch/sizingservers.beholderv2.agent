@@ -4,7 +4,7 @@
  * 
  */
 
-using sizingservers.beholder.agent.windows;
+using sizingservers.beholderv2.agent.windows;
 using sizingservers.beholderv2.agent.shared;
 using System;
 using System.Threading;
@@ -20,7 +20,7 @@ namespace sizingservers.beholderv2.agent.windows {
             Console.WriteLine("  Reporting system information every " + Config.GetInstance().reportEvery + " to " + Config.GetInstance().endpoint);
             Console.WriteLine();
 
-            PayloadReporter.RegisterRetreiverAndStartReporting(PayloadRetreiver.GetInstance());
+            PayloadReporter.RegisterRetrieverAndStartReporting(PayloadRetriever.GetInstance());
 
             Console.ReadLine();
         }

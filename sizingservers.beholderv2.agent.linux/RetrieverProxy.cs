@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -13,18 +15,86 @@ namespace sizingservers.beholderv2.agent.linux {
             while (File.Exists(tempPath)) {
                 File.Delete(tempPath);
                 tempPath += "_";
-            }            
+            }
         }
 
+        public static string GetDnsDomainName() {
+            var startInfo = new ProcessStartInfo("/bin/bash") {
+                Arguments = "-c \"dnsdomainname\"",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+
+            };
+            var p = Process.Start(startInfo);
+            string s = p.StandardOutput.ReadToEnd();
+            p.WaitForExit();
+
+            return s;
+        }
+        /// <summary>
+        /// Gets the inxi key value pairs per category.
+        /// </summary>
+        /// <param name="inxiArgs">The inxi arguments e.g. -SCDMNm -xi. Do not use -c 0 (no color) since the color info is used to get values correctly. 
+        /// Inxi is a script to easily retrieve system info. Install it using a packagemanager like apt(itude) or manually and puth in in PATH.</param>
+        /// <returns>
+        /// <para>Category e.g Memory, Keys, Values e.g. Speed in Mhz. A component (key) can have sub info. Since those keys are not unique in the output they are started with the component key. e.g. Device-1, Device-1 size, Device-1 speed</para>
+        /// <para>Always use .GetValueOrDefault to ensure a value (null) is returned even if the key is not found.</para>
+        /// </returns>
+        public static Dictionary<string, Dictionary<string, string>> GetInxiInfo(string inxiArgs) {
+            var d = new Dictionary<string, Dictionary<string, string>>();
+
+            //ESC --> char(27)
+            //ESC[1;34mSystem:   ESC[0;37m ESC[1;34mHost:ESC[0;37m WorkshopIoTFest ESC[1;34mKernel:ESC[0;37m 4.4.0-78-generic x86_64 (64 bit) ESC[1;34mDesktop:ESC[0;37m Unity 7.4.0ESC[0;37m
+            //ESC[1;34m          ESC[0;37m ESC[1;34mDistro:ESC[0;37m Ubuntu 16.04 xenialESC[0;37m
+            //ESC[0m
+            //
+            //Key between ESC[1;34m and ESC[0;37m. This text can be whitespace and should be ommited. 
+            //Value between ESC[0;37m and ESC[1;34m or last delimiter can be ESC[0;37m\n at the end of a sentence.
+            //\nESC[m0 at the end can be ommited.
+
+            string startColor = (char)27 + "[1;34m";
+            string stopColor = (char)27 + "[0;37m";
+            string end = (char)27 + "[m0";
+
+            string info = GetInxiOutput(inxiArgs).Replace(stopColor + "\n", "").Replace(end, startColor).Trim();
+
+            if (info.Contains(stopColor + " " + stopColor))
+                throw new Exception("Error parsing inxi output. Run with root privileges?\noutput:" + info);
+            
+            Dictionary<string, string> currentKvps = null;
+            string currentComponentKey = null;
+            while (info.Length != 0) {
+                string key = info.StartsWith(startColor) ? GetStringBetween(info, stopColor, out info) : GetStringBetween(info, startColor, stopColor, out info);
+                string value = GetStringBetween(info, startColor, out info);
+                key = key.Replace(":", "").Trim();
+                value = value.Trim();
+
+                if (value.Length == 0) {
+                    currentKvps = new Dictionary<string, string>();
+                    d.Add(key, currentKvps);
+                }
+                else {
+                    if (char.IsUpper(key[0]))
+                        currentComponentKey = key;
+                    else 
+                        key = currentComponentKey + " " + key; 
+
+                    currentKvps.Add(key, value);
+                }
+            }
+
+            return d;
+        }
         /// <summary>
         /// Gets the information.
         /// </summary>
-        /// <param name="inxiArgs">The inxi arguments e.g. -SCDMNm -xi -c 0. Inxi is a script to easily retrieve system info.</param>
+        /// <param name="inxiArgs">The inxi arguments e.g. -SCDMNm -xi. Do not use -c 0 (no color) since the color info is used to get values correctly. 
+        /// Inxi is a script to easily retrieve system info. Install it using a packagemanager like apt(itude) or manually and puth in in PATH.</param>
         /// <returns></returns>
-        public static string GetInfo(string inxiArgs) {
+        private static string GetInxiOutput(string inxiArgs) {
             string tempPath = Path.Combine(_thisDirectory, "temp");
-            while (File.Exists(tempPath))
-                tempPath += "_";
+            while (File.Exists(tempPath)) tempPath += "_";
 
             //S(ystem)  --> host, kernel, desktop, distro
             //D(rives)  --> hdd total size, id, model, size in GB
@@ -34,11 +104,11 @@ namespace sizingservers.beholderv2.agent.linux {
 
             //xi        --> extended info above,  N + ipv6 info
             //c 0       --> no color
+
             var startInfo = new ProcessStartInfo("inxi " + inxiArgs + " > '" + tempPath + "'") {
                 UseShellExecute = true
             };
-            var p = Process.Start(startInfo);
-            p.WaitForExit();
+            Process.Start(startInfo).WaitForExit();
 
             string output = string.Empty;
             using (var sr = new StreamReader(new FileStream(tempPath, FileMode.Open)))
@@ -48,5 +118,41 @@ namespace sizingservers.beholderv2.agent.linux {
 
             return output;
         }
+        /// <summary>
+        /// Gets the string between 0 and the index of end.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="trimmedInput">
+        /// <para>input without the "string between" and the given delimiters. e.g. input: foo;b_ar begin: ; end: _ string between: b trimmedInput: fooar.</para>
+        /// <para>Useful for when you want to get multiple string betweens from a text: use the trimmedInput as a new input to make text searches faster.</para>
+        /// </param>
+        /// <returns></returns>
+        public static string GetStringBetween(string input, string end, out string trimmedInput) { return GetStringBetween(input, "", end, out trimmedInput); }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <param name="trimmedInput">
+        /// <para>input without the "string between" and the given delimiters. e.g. input: foo;b_ar begin: ; end: _ string between: b trimmedInput: fooar.</para>
+        /// <para>Useful for when you want to get multiple string betweens from a text: use the trimmedInput as a new input to make text searches faster.</para>
+        /// </param>
+        /// <returns></returns>
+        public static string GetStringBetween(string input, string begin, string end, out string trimmedInput) {
+            trimmedInput = input;
+
+            int startIndex = begin.Length == 0 ? 0 : input.IndexOf(begin);
+            int length = input.Substring(startIndex + begin.Length).IndexOf(end);
+
+            if (startIndex == -1 || length == -1)
+                return string.Empty;
+
+            trimmedInput = trimmedInput.Substring(0, startIndex) + trimmedInput.Substring(startIndex + begin.Length + length + end.Length);
+
+            return input.Substring(startIndex + begin.Length, length);
+        }
+
     }
 }
