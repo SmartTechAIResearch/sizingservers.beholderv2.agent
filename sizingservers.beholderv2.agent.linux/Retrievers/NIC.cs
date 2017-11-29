@@ -1,6 +1,6 @@
 ﻿using sizingservers.beholderv2.agent.shared;
 using System.Collections.Generic;
-using System.Management;
+using System.Linq;
 
 namespace sizingservers.beholderv2.agent.linux {
     internal class NIC : IPayloadRetriever {
@@ -13,17 +13,17 @@ namespace sizingservers.beholderv2.agent.linux {
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
-            ManagementObjectCollection col = 
-                RetreiverProxy.GetInfo("SELECT Name, DriverDescription, MediaConnectState FROM MSFT_NetAdapter WHERE HardwareInterface = 'True' AND EndpointInterface = 'False'",
-                "root\\StandardCimv2");
-            foreach (ManagementObject mo in col)
-                cgs.Add(new ComponentGroup("NIC",
-                    new PayloadProperty[] {
-                        new PayloadProperty("Name", mo["Name"]),
-                        new PayloadProperty("DriverDescription", mo["DriverDescription"]),
-                        new PayloadProperty("MediaConnectState", mo["MediaConnectState"])
-                    })
-                );
+            Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("-n")["Network"];
+            HashSet<PayloadProperty> currentProperties = null;
+            foreach (string key in col.Keys)
+                if (key.StartsWith("Card-") && !key.EndsWith(" driver")) {
+                    currentProperties = new HashSet<PayloadProperty>();
+                    currentProperties.Add(new PayloadProperty("Name", col.GetValueOrDefault(key)));
+                }
+                else if (key == "IF mac") {
+                    currentProperties.Add(new PayloadProperty("MAC address", ("" + col.GetValueOrDefault(key)).ToUpperInvariant()));
+                    cgs.Add(new ComponentGroup("NIC", currentProperties.ToArray())); //Can be spoofed, do not run in a VM!
+                }
 
             return cgs;
         }

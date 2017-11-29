@@ -15,7 +15,7 @@ namespace sizingservers.beholderv2.agent.windows {
         /// <param name="query">The WMI query.</param>
         /// <param name="scopeNameSpace">The scope name space.</param>
         /// <returns></returns>
-        public static ManagementObjectCollection GetInfo(string query, string scopeNameSpace = "root\\cimv2") {
+        public static ManagementObjectCollection GetWmiInfo(string query, string scopeNameSpace = "root\\cimv2") {
             return new ManagementObjectSearcher(ConnectScope(scopeNameSpace), new ObjectQuery(query)).Get();
         }
 

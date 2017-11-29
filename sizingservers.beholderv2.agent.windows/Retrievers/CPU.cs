@@ -17,7 +17,7 @@ namespace sizingservers.beholderv2.agent.windows {
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
-            ManagementObjectCollection col = RetrieverProxy.GetInfo("Select Name from Win32_Processor");
+            ManagementObjectCollection col = RetrieverProxy.GetWmiInfo("Select Name from Win32_Processor");
             foreach (ManagementObject mo in col) {
                 string name = mo["Name"].ToString(); //Format the name so it looks like the inxi output.
                 name = name.Split(new string[] { " CPU @" }, StringSplitOptions.None)[0];

@@ -10,20 +10,26 @@ namespace sizingservers.beholderv2.agent.windows {
 
         private NIC() { }
 
+
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
-            ManagementObjectCollection col = 
-                RetrieverProxy.GetInfo("SELECT Name, DriverDescription, MediaConnectState FROM MSFT_NetAdapter WHERE HardwareInterface = 'True' AND EndpointInterface = 'False'",
+            ManagementObjectCollection col =
+                RetrieverProxy.GetWmiInfo("SELECT InterfaceGuid, DriverDescription FROM MSFT_NetAdapter WHERE HardwareInterface = 'True' AND EndpointInterface = 'False'",
                 "root\\StandardCimv2");
-            foreach (ManagementObject mo in col)
+            foreach (ManagementObject mo in col) {
+                string macAddress = "";
+
+                var col2 = RetrieverProxy.GetWmiInfo("SELECT MACAddress FROM Win32_NetworkAdapterConfiguration WHERE SettingID = '" + mo["InterfaceGuid"] + "'");
+                foreach (var mo2 in col2) macAddress = mo2["MACAddress"].ToString().ToUpperInvariant();
+
                 cgs.Add(new ComponentGroup("NIC",
                     new PayloadProperty[] {
-                        new PayloadProperty("Name", mo["Name"]),
-                        new PayloadProperty("DriverDescription", mo["DriverDescription"]),
-                        new PayloadProperty("MediaConnectState", mo["MediaConnectState"])
+                        new PayloadProperty("Name", mo["DriverDescription"].ToString().Replace("(R) ", "").Replace("(TM)", "").Replace("(tm)", "")),
+                       new PayloadProperty("MAC address", macAddress, true) //Can be spoofed, do not run in a VM!
                     })
                 );
+            }
 
             return cgs;
         }

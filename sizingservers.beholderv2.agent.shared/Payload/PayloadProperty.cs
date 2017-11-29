@@ -13,6 +13,13 @@ namespace sizingservers.beholderv2.agent.shared {
         public string Type { get; set; }
         public string Name { get; set; }
         public string Value { get; set; }
+        /// <summary>
+        /// When matching hardware (ComponentGroups) as it moves around, this property is used as a sole identifier if this is true, except if it is null or empty. The other fields are disregarded. This is handy for, for instance a disk moves from Linux to Windows, the model name is formatted differently, but the serial number stays the same.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [unique identifier]; otherwise, <c>false</c>.
+        /// </value>
+        public bool UniqueId { get; set; }
         public string Unit { get; set; }
 
         /// <summary>
@@ -21,10 +28,12 @@ namespace sizingservers.beholderv2.agent.shared {
         /// <param name="type">The type.</param>
         /// <param name="name">The name.</param>
         /// <param name="value">The value. The "ToString()" is stored. Or if it is an IEnumerable it will be serialized as { + \"x0\", ..., \"xn\" + } (only single level collections are handled correctly).</param>
+        /// <param name="uniqueId">When matching hardware (ComponentGroups) as it moves around, this property is used as a sole identifier if this is true, except if it is null or empty. The other fields are disregarded. This is handy for, for instance a disk moves from Linux to Windows, the model name is formatted differently, but the serial number stays the same.</param>
         /// <param name="unit">%, GB, empty string,... cannot be null</param>
-        public PayloadProperty(string name, object value, string unit = "") {
+        public PayloadProperty(string name, object value, bool uniqueId = false, string unit = "") {
             Name = name;
             SetValue(value);
+            UniqueId = uniqueId;
             Unit = unit;
         }
         /// <summary>
@@ -33,11 +42,13 @@ namespace sizingservers.beholderv2.agent.shared {
         /// <param name="type">The type.</param>
         /// <param name="name">The name.</param>
         /// <param name="value">The value. The "ToString()" is stored. Or if it is an IEnumerable it will be serialized as { + \"x0\", ..., \"xn\" + } (only single level collections are handled correctly).</param>
+        /// <param name="uniqueId">When matching hardware (ComponentGroups) as it moves around, this property is used as a sole identifier if this is true. The other fields are disregarded. This is handy for, for instance a disk moves from Linux to Windows, the model name is formatted differently, but the serial number stays the same.</param>
         /// <param name="unit">%, GB, empty string,... cannot be null</param>
-        private PayloadProperty(string type, string name, string value, string unit) {
+        private PayloadProperty(string type, string name, string value, bool uniqueId, string unit) {
             Type = type;
             Name = name;
             Value = value;
+            UniqueId = uniqueId;
             Unit = unit;
         }
         /// <summary>
@@ -50,6 +61,8 @@ namespace sizingservers.beholderv2.agent.shared {
         /// </summary>
         /// <param name="value">The value.</param>
         public void SetValue(object value) {
+            if (value == null) value = "";
+
             if (value is string) {
                 SetType(PayloadType.String);
                 Value = value.ToString();
@@ -96,6 +109,6 @@ namespace sizingservers.beholderv2.agent.shared {
         /// Clones this instance.
         /// </summary>
         /// <returns></returns>
-        public PayloadProperty Clone() { return new PayloadProperty(Type, Name, Value, Unit); }
+        public PayloadProperty Clone() { return new PayloadProperty(Type, Name, Value, UniqueId, Unit); }
     }
 }

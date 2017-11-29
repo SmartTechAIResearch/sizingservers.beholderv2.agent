@@ -16,12 +16,13 @@ namespace sizingservers.beholderv2.agent.windows {
 
             var properties = new HashSet<PayloadProperty>();
 
-            ManagementObjectCollection col = RetrieverProxy.GetInfo("Select Manufacturer, Product from Win32_BaseBoard"); //Version?
+            ManagementObjectCollection col = RetrieverProxy.GetWmiInfo("Select Manufacturer, Product, SerialNumber from Win32_BaseBoard"); //Version?
             foreach (ManagementObject mo in col) {
                 properties.Add(new PayloadProperty("Manufacturer", mo["Manufacturer"]));
                 properties.Add(new PayloadProperty("Model", mo["Product"]));
+                properties.Add(new PayloadProperty("SerialNumber", mo["SerialNumber"], true));
             }
-            col = RetrieverProxy.GetInfo("Select Name from Win32_BIOS WHERE PrimaryBIOS='True'");
+            col = RetrieverProxy.GetWmiInfo("Select Name from Win32_BIOS WHERE PrimaryBIOS='True'");
             foreach (ManagementObject mo in col)
                 properties.Add(new PayloadProperty("BIOS", mo["Name"]));
 
