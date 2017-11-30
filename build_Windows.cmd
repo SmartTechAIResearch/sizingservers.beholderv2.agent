@@ -1,12 +1,12 @@
 REM 2017 Sizing Servers Lab
 REM University College of West-Flanders, Department GKG 
-echo sizingservers.beholder.agent for Windows build script
+echo sizingservers.beholderv2.agent for Windows build script
 echo ----------
 rmdir /S /Q Build
-cd sizingservers.beholder.agent
+cd sizingservers.beholderv2.agent
 dotnet restore
 dotnet publish -c Debug
-cd ..\sizingservers.beholder.agent.windows
+cd ..\sizingservers.beholderv2.agent.windows
 dotnet restore
 dotnet build -c Debug
 cd ..

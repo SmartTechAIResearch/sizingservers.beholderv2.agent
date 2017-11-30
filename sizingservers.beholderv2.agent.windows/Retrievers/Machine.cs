@@ -16,9 +16,16 @@ namespace sizingservers.beholderv2.agent.windows {
 
             var properties = new HashSet<PayloadProperty>();
 
-            ManagementObjectCollection col = RetrieverProxy.GetWmiInfo("Select CSName, Domain, Manufacturer, Model from Win32_ComputerSystem");
+            string hostname = "";
+
+            ManagementObjectCollection col = RetrieverProxy.GetWmiInfo("Select CSName from Win32_OperatingSystem");
+            foreach (ManagementObject mo in col) 
+                hostname = mo["CSName"].ToString();
+            
+            col = RetrieverProxy.GetWmiInfo("Select Domain from Win32_ComputerSystem");
             foreach (ManagementObject mo in col) {
-                properties.Add(new PayloadProperty("Hostname", mo["CSName"] + "." + mo["Domain"], true));
+                hostname += "." + mo["Domain"];
+                properties.Add(new PayloadProperty("Hostname", hostname.ToUpperInvariant(), true));
             }
 
             col = RetrieverProxy.GetWmiInfo("Select IPAddress from Win32_NetworkAdapterConfiguration where IPEnabled='True'");

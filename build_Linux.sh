@@ -1,12 +1,12 @@
 # 2017 Sizing Servers Lab
 # University College of West-Flanders, Department GKG 
-echo sizingservers.beholder.agent for Linux build script
+echo sizingservers.beholderv2.agent for Linux build script
 echo ----------
 rm -rf Build
-cd sizingservers.beholder.agent
+cd sizingservers.beholderv2.agent
 dotnet restore
 dotnet publish -c Debug
-cd ../sizingservers.beholder.agent.linux
+cd ../sizingservers.beholderv2.agent.linux
 dotnet restore
 dotnet publish -c Debug
 cd ..

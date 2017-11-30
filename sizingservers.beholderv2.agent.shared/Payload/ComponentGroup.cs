@@ -1,6 +1,11 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace sizingservers.beholderv2.agent.shared {
+    /// <summary>
+    /// 
+    /// </summary>
+    [DebuggerDisplay("Type = {Type}, Count = {Count}")]
     public class ComponentGroup {
         public string Type { get; set; }
         public long Count { get; set; }
@@ -24,6 +29,8 @@ namespace sizingservers.beholderv2.agent.shared {
                 sb.Append(property.Name);
                 sb.Append(property.Type);
                 sb.Append(property.Value);
+                sb.Append(property.UniqueId);
+                sb.Append(property.Unit);
             }
             return sb.ToString();
         }

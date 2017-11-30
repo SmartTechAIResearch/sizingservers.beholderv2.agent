@@ -19,7 +19,9 @@ namespace sizingservers.beholderv2.agent.linux {
             Console.WriteLine("  Reporting every " + Config.GetInstance().reportEvery + " to " + Config.GetInstance().endpoint);
             Console.WriteLine();
 
-            SystemInformationReporter.RegisterRetreiverAndStartReporting(SystemInformationRetreiver.GetInstance());
+            Console.ReadLine();
+
+            PayloadReporter.RegisterRetrieverAndStartReporting(PayloadRetriever.GetInstance());
 
             Console.ReadLine();
         }

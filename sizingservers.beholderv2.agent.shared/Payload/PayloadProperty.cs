@@ -1,12 +1,14 @@
 ﻿using SizingServers.Util;
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Text;
 
 namespace sizingservers.beholderv2.agent.shared {
     /// <summary>
     /// Made because we want to easily extend the hardware info we can get.
     /// </summary>
+    [DebuggerDisplay("Type = {Type}, Name = {Name}, Value = {Value}, UniqueId = {UniqueId}, Unit = {Unit}")]
     public class PayloadProperty {
         public enum PayloadType { Collection, String, Long, Double, Boolean }
 
@@ -69,7 +71,7 @@ namespace sizingservers.beholderv2.agent.shared {
             }
             else if (value is IEnumerable) {
                 SetType(PayloadType.Collection);
-                var enumerator = (Value as IEnumerable).GetEnumerator();
+                var enumerator = (value as IEnumerable).GetEnumerator();
                 enumerator.Reset();
 
                 var sb = new StringBuilder();
