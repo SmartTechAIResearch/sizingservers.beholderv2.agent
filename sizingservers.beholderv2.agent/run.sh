@@ -1,1 +1,1 @@
-dotnet sizingservers.beholder.agent.dll
+dotnet sizingservers.beholderv2.agent.dll

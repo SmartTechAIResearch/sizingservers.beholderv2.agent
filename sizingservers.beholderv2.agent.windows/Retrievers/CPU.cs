@@ -1,10 +1,6 @@
 ﻿using sizingservers.beholderv2.agent.shared;
-using System;
 using System.Collections.Generic;
 using System.Management;
-
-#warning Fetch stuff from CPUID? Family, Model, Stepping, Ext. Family, Ext. Model, Revision.
-#warning Ensure cpu name is the same for Linux and Windows
 
 namespace sizingservers.beholderv2.agent.windows {
     internal class CPU : IPayloadRetriever {
@@ -18,17 +14,10 @@ namespace sizingservers.beholderv2.agent.windows {
             var cgs = new HashSet<ComponentGroup>();
 
             ManagementObjectCollection col = RetrieverProxy.GetWmiInfo("Select Name from Win32_Processor");
-            foreach (ManagementObject mo in col) {
-                string name = mo["Name"].ToString(); //Format the name so it looks like the inxi output.
-                name = name.Split(new string[] { " CPU @" }, StringSplitOptions.None)[0];
-                name = name.Replace("(R) ", "").Replace("(TM)", "").Replace("(tm)", "");                
-
+            foreach (ManagementObject mo in col)
                 cgs.Add(new ComponentGroup("CPU",
-                    new PayloadProperty[] {
-                        new PayloadProperty("Name", name)
-                    })
+                    new PayloadProperty[] { new PayloadProperty("Name", mo["Name"]) })
                 );
-            }
 
             return cgs;
         }

@@ -21,8 +21,13 @@ namespace sizingservers.beholderv2.agent.linux {
 
             Console.ReadLine();
 
-            PayloadReporter.RegisterRetrieverAndStartReporting(PayloadRetriever.GetInstance());
-
+            if (RetrieverProxy.IsVM()) {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Beholder does not work for VMs!");
+            }
+            else {
+                PayloadReporter.RegisterRetrieverAndStartReporting(PayloadRetriever.GetInstance());
+            }
             Console.ReadLine();
         }
     }

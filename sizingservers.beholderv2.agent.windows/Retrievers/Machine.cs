@@ -25,7 +25,7 @@ namespace sizingservers.beholderv2.agent.windows {
             col = RetrieverProxy.GetWmiInfo("Select Domain from Win32_ComputerSystem");
             foreach (ManagementObject mo in col) {
                 hostname += "." + mo["Domain"];
-                properties.Add(new PayloadProperty("Hostname", hostname.ToUpperInvariant(), true));
+                properties.Add(new PayloadProperty("Hostname", hostname.ToLowerInvariant(), true));
             }
 
             col = RetrieverProxy.GetWmiInfo("Select IPAddress from Win32_NetworkAdapterConfiguration where IPEnabled='True'");

@@ -16,12 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="inxi">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\sizingservers.beholderv2.agent.shared\sizingservers.beholderv2.agent.shared.csproj" />
   </ItemGroup>
 

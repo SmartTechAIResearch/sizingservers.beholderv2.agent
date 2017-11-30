@@ -12,10 +12,10 @@ namespace sizingservers.beholderv2.agent.linux {
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
-            Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("-m -xx")["Memory"];
+            Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("-mxx")["Memory"];
             HashSet<PayloadProperty> currentProperties = null;
             foreach (string key in col.Keys)
-                if (key.StartsWith("Device-")) {
+                if (key.StartsWith("Device")) {
                     string value = col.GetValueOrDefault(key);
                     if (value == null || value.StartsWith("No Module") || value == "N/A")
                         continue;

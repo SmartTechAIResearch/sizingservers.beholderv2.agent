@@ -16,7 +16,7 @@ namespace sizingservers.beholderv2.agent.linux {
             var properties = new HashSet<PayloadProperty>();
 
             Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("-S")["System"];
-            properties.Add(new PayloadProperty("Hostname", col.GetValueOrDefault("Host") + "." + RetrieverProxy.GetDnsDomainName(), true));
+            properties.Add(new PayloadProperty("Hostname", (col.GetValueOrDefault("Host") + "." + RetrieverProxy.GetDnsDomainName()).ToLowerInvariant(), true));
             properties.Add(new PayloadProperty("OS", col.GetValueOrDefault("Distro") + " Kernel " + col.GetValueOrDefault("Kernel")));
 
             col = RetrieverProxy.GetInxiInfo("-xi")["Network"];

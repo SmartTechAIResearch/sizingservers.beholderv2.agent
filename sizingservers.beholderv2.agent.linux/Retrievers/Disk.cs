@@ -16,7 +16,7 @@ namespace sizingservers.beholderv2.agent.linux {
             Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("-D -xx")["Drives"];
             HashSet<PayloadProperty> currentProperties = null;
             foreach (string key in col.Keys)
-                if (key.StartsWith("ID-")) {
+                if (key.StartsWith("ID")) {
                     if (key.EndsWith(" model")) {
                         currentProperties = new HashSet<PayloadProperty>();
                         currentProperties.Add(new PayloadProperty("Model", col.GetValueOrDefault(key)));

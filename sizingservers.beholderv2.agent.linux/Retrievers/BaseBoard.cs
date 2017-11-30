@@ -15,7 +15,7 @@ namespace sizingservers.beholderv2.agent.linux {
 
             var properties = new HashSet<PayloadProperty>();
 
-            Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("M")["Machine"];
+            Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("-M")["Machine"];
             properties.Add(new PayloadProperty("Manufacturer", col.GetValueOrDefault("Mobo")));
             properties.Add(new PayloadProperty("Model", col.GetValueOrDefault("Mobo model")));
             properties.Add(new PayloadProperty("SerialNumber", col.GetValueOrDefault("Mobo serial"), true));

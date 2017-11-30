@@ -8,6 +8,16 @@ namespace sizingservers.beholderv2.agent.linux {
     internal static class RetrieverProxy {
         private static string _thisDirectory;
 
+        /// <summary>
+        /// Determines whether this instance is vm.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if this instance is vm; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsVM() {
+            string output = GetBashStdOutput("dmesg | grep -i 'hypervisor detected:'");
+            return output.Trim().Length != 0;
+        }
         static RetrieverProxy() {
             _thisDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
@@ -17,10 +27,28 @@ namespace sizingservers.beholderv2.agent.linux {
                 tempPath += "_";
             }
         }
-
+        /// <summary>
+        /// Gets the name of the DNS domain.
+        /// </summary>
+        /// <returns></returns>
         public static string GetDnsDomainName() {
+            return GetBashStdOutput("dnsdomainname");
+        }
+        /// <summary>
+        /// Gets the cpu information.
+        /// </summary>
+        /// <returns></returns>
+        public static CpuInfo GetCpuInfo() {
+            string[] output = GetBashStdOutput("lscpu | egrep 'Socket(s):|Model name:'").Split('\n');
+
+            return new CpuInfo() {
+                Count = int.Parse(output[0].Split(':')[1].Trim()),
+                Name = output[1].Split(':')[1].Trim()
+            };
+        }
+        private static string GetBashStdOutput(string command) {
             var startInfo = new ProcessStartInfo("/bin/bash") {
-                Arguments = "-c \"dnsdomainname\"",
+                Arguments = "-c \"" + command + "\"",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 CreateNoWindow = true
@@ -55,19 +83,24 @@ namespace sizingservers.beholderv2.agent.linux {
 
             string startColor = (char)27 + "[1;34m";
             string stopColor = (char)27 + "[0;37m";
-            string end = (char)27 + "[m0";
+            string end = (char)27 + "[0m";
 
-            string info = GetInxiOutput(inxiArgs).Replace(stopColor + "\n", "").Replace(end, startColor).Trim();
+            string beginKey = "_._begin_._";
+            string endKey = "_._end_._";
 
-            if (info.Contains(stopColor + " " + stopColor))
+            string info = GetInxiOutput(inxiArgs).Replace(stopColor + "\n", "").Replace(startColor, beginKey).Replace(stopColor, endKey).Replace(end, beginKey).Trim();
+
+            if (info.Contains(endKey + " " + endKey))
                 throw new Exception("Error parsing inxi output. Run with root privileges?\noutput:" + info);
-            
+
             Dictionary<string, string> currentKvps = null;
             string currentComponentKey = null;
             while (info.Length != 0) {
-                string key = info.StartsWith(startColor) ? GetStringBetween(info, stopColor, out info) : GetStringBetween(info, startColor, stopColor, out info);
-                string value = GetStringBetween(info, startColor, out info);
+                string key = info.StartsWith(beginKey) ? GetStringBetween(info, beginKey, endKey, out info) : GetStringBetween(info, endKey, out info);
+                string value = GetStringBetween(info, beginKey, out info);
+                info = info.Trim();
                 key = key.Replace(":", "").Trim();
+                if (key.Length == 0) continue;
                 value = value.Trim();
 
                 if (value.Length == 0) {
@@ -75,11 +108,13 @@ namespace sizingservers.beholderv2.agent.linux {
                     d.Add(key, currentKvps);
                 }
                 else {
-                    if (char.IsUpper(key[0]))
+                    if (char.IsUpper(key[0])) {
+                        while (currentKvps.ContainsKey(key)) key += "_"; //Avoid multiple entries.
                         currentComponentKey = key;
-                    else 
-                        key = currentComponentKey + " " + key; 
-
+                    }
+                    else {
+                        key = currentComponentKey + " " + key;
+                    }
                     currentKvps.Add(key, value);
                 }
             }
@@ -154,5 +189,12 @@ namespace sizingservers.beholderv2.agent.linux {
             return input.Substring(startIndex + begin.Length, length);
         }
 
+        /// <summary>
+        /// /
+        /// </summary>
+        public struct CpuInfo {
+            public int Count { get; set; }
+            public string Name { get; set; }
+        }
     }
 }

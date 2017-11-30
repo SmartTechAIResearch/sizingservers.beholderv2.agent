@@ -4,7 +4,6 @@
  * 
  */
 
-using sizingservers.beholderv2.agent.windows;
 using sizingservers.beholderv2.agent.shared;
 using System;
 using System.Threading;
@@ -20,8 +19,13 @@ namespace sizingservers.beholderv2.agent.windows {
             Console.WriteLine("  Reporting system information every " + Config.GetInstance().reportEvery + " to " + Config.GetInstance().endpoint);
             Console.WriteLine();
 
-            PayloadReporter.RegisterRetrieverAndStartReporting(PayloadRetriever.GetInstance());
-
+            if (RetrieverProxy.IsVM()) {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Beholder does not work for VMs!");
+            }
+            else {
+                PayloadReporter.RegisterRetrieverAndStartReporting(PayloadRetriever.GetInstance());
+            }
             Console.ReadLine();
         }
     }

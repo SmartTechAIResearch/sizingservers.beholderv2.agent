@@ -10,6 +10,21 @@ namespace sizingservers.beholderv2.agent.windows {
         private static ConcurrentDictionary<string, ManagementScope> _connectedScopes = new ConcurrentDictionary<string, ManagementScope>();
 
         /// <summary>
+        /// Determines whether this instance is vm.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if this instance is vm; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsVM() {
+            ManagementObjectCollection col = GetWmiInfo("Select Model from Win32_ComputerSystem");
+            foreach (ManagementObject mo in col) 
+                if (mo["Model"].ToString().ToLowerInvariant().Contains("virtual"))
+                    return true;
+            
+            return false;
+        }
+
+        /// <summary>
         /// Caches the ManagementScopes.
         /// </summary>
         /// <param name="query">The WMI query.</param>
