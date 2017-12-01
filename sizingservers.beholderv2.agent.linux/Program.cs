@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace sizingservers.beholderv2.agent.linux {
     class Program {
-        private static Mutex _namedMutex = new Mutex(true, "sizingservers.beholder.agent.linux");
+        private static Mutex _namedMutex = new Mutex(true, "sizingservers.beholderv2.agent.linux");
 
         static void Main(string[] args) {
             if (!_namedMutex.WaitOne()) return;

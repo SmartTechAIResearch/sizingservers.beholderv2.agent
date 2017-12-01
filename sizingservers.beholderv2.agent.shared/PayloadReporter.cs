@@ -35,19 +35,13 @@ namespace sizingservers.beholderv2.agent.shared {
 
                     string json = JsonConvert.SerializeObject(report);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                    Console.WriteLine(DateTime.Now.ToString("yyyy\"-\"MM\"-\"dd\" \"HH\":\"mm\":\"ss") + " - Reporting: " + json);
-                    Console.WriteLine();
+                    LogToConsole.Info("Reporting: " + json);
 
                     await _httpClient.PostAsync(Config.GetInstance().endpoint + "/api/report?apiKey=" + Config.GetInstance().apiKey, content);
                     break;
                 }
                 catch (Exception ex) {
-                    ConsoleColor c = Console.ForegroundColor;
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(DateTime.Now.ToString("yyyy\"-\"MM\"-\"dd\" \"HH\":\"mm\":\"ss") + " - Failed:\n" + ex);
-                    Console.WriteLine();
-                    Console.ForegroundColor = c;
+                    LogToConsole.Error(ex);
                     Thread.Sleep(1000);
                 }
         }

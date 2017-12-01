@@ -5,6 +5,7 @@
  */
 
 using sizingservers.beholderv2.agent.shared;
+using System;
 using System.Collections.Generic;
 
 namespace sizingservers.beholderv2.agent.linux {
@@ -13,7 +14,7 @@ namespace sizingservers.beholderv2.agent.linux {
     /// </summary>
     /// <seealso cref="sizingservers.beholderv2.agent.shared.IPayloadRetriever" />
     internal class PayloadRetriever : IPayloadRetriever {
-        public static PayloadRetriever _instance = new PayloadRetriever();
+        private static PayloadRetriever _instance = new PayloadRetriever();
         /// <summary>
         /// Gets the instance.
         /// </summary>
@@ -28,12 +29,12 @@ namespace sizingservers.beholderv2.agent.linux {
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new List<ComponentGroup>();
 
-            cgs.AddRange(Machine.GetInstance().Retrieve());
-            cgs.AddRange(BaseBoard.GetInstance().Retrieve());
-            cgs.AddRange(CPU.GetInstance().Retrieve());
-            cgs.AddRange(RAM.GetInstance().Retrieve());
-            cgs.AddRange(Disk.GetInstance().Retrieve());
-            cgs.AddRange(NIC.GetInstance().Retrieve());
+            try { cgs.AddRange(Machine.GetInstance().Retrieve()); } catch (Exception ex) { LogToConsole.Error(ex); }
+            try { cgs.AddRange(BaseBoard.GetInstance().Retrieve()); } catch (Exception ex) { LogToConsole.Error(ex); }
+            try { cgs.AddRange(CPU.GetInstance().Retrieve()); } catch (Exception ex) { LogToConsole.Error(ex); }
+            try { cgs.AddRange(RAM.GetInstance().Retrieve()); } catch (Exception ex) { LogToConsole.Error(ex); }
+            try { cgs.AddRange(Disk.GetInstance().Retrieve()); } catch (Exception ex) { LogToConsole.Error(ex); }
+            try { cgs.AddRange(NIC.GetInstance().Retrieve()); } catch (Exception ex) { LogToConsole.Error(ex); }
 
             return ComponentGroupConsolidator.Do(cgs);
         }

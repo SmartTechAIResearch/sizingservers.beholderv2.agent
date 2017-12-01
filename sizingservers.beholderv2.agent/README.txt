@@ -1,10 +1,10 @@
-sizingservers.beholder.agent
+sizingservers.beholderv2.agent
 
     2017 Sizing Servers Lab  
     University College of West-Flanders, Department GKG
 
 
-This project is part of a computer hardware inventorization solution, together with sizingservers.beholder.api and sizingservers.beholder.frontend.
+This project is part of a computer hardware inventorization solution, together with sizingservers.beholderv2.api and sizingservers.beholderv2.frontend.
 
 Agents are installed on the computers you want to inventorize. These communicate with the REST API which stores hardware info. The front-end app visualizes that info.
 

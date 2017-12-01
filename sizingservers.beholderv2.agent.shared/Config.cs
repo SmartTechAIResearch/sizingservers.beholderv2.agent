@@ -53,13 +53,13 @@ namespace sizingservers.beholderv2.agent.shared {
         }
 
         /// <summary>
-        /// Return the loaded config (sizingservers.beholder.conf). Throws exception on load failure.
+        /// Return the loaded config (sizingservers.beholderv2.agent.conf). Throws exception on load failure.
         /// </summary>
         /// <returns></returns>
         public static Config GetInstance() { return _instance; }
 
         /// <summary>
-        /// Loads sizingservers.beholder.agent.conf. Throws exception on failure.
+        /// Loads sizingservers.beholderv2.agent.conf. Throws exception on failure.
         /// </summary>
         private void Load() {
             Dictionary<string, string> kvps = GetConfKvps();
