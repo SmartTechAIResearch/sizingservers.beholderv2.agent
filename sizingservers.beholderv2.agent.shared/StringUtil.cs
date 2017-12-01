@@ -119,7 +119,7 @@ namespace SizingServers.Util {
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static string ReverseString(string s) {
+        private static string ReverseString(string s) {
             var sb = new StringBuilder(s.Length); ;
             for (int i = s.Length - 1; i != -1; i--)
                 sb.Append(s[i]);

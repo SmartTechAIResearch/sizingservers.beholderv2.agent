@@ -12,7 +12,7 @@ namespace sizingservers.beholderv2.agent.linux {
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
-            RetrieverProxy.CpuInfo cpuInfo = RetrieverProxy.GetCpuInfo();
+            RetrieverHelper.CpuInfo cpuInfo = RetrieverHelper.GetCpuInfo();
 
             var properties = new PayloadProperty[cpuInfo.Count];
             for (int i = 0; i != cpuInfo.Count; i++) properties[i] = new PayloadProperty("Name", cpuInfo.Name);

@@ -9,12 +9,38 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace sizingservers.beholderv2.agent.shared {
+    /// <summary>
+    /// Loads the .conf file and makes the properties available.
+    /// </summary>
     public class Config {
         private static Config _instance = new Config();
-
+        /// <summary>
+        /// Gets the endpoint.
+        /// </summary>
+        /// <value>
+        /// The endpoint.
+        /// </value>
         public string endpoint { get; internal set; }
+        /// <summary>
+        /// Gets the API key.
+        /// </summary>
+        /// <value>
+        /// The API key.
+        /// </value>
         public string apiKey { get; internal set; }
+        /// <summary>
+        /// Gets the report every x minutes.
+        /// </summary>
+        /// <value>
+        /// The report every x minutes.
+        /// </value>
         public int reportEveryXMinutes { get; internal set; }
+        /// <summary>
+        /// Gets the report every.
+        /// </summary>
+        /// <value>
+        /// The report every.
+        /// </value>
         public string reportEvery { get; internal set; }
 
         /// <summary>

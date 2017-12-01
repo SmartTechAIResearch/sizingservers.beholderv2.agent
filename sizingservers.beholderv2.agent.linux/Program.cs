@@ -21,7 +21,7 @@ namespace sizingservers.beholderv2.agent.linux {
 
             Console.ReadLine();
 
-            if (RetrieverProxy.IsVM()) {
+            if (RetrieverHelper.IsVM()) {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Beholder does not work for VMs!");
             }

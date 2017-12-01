@@ -15,11 +15,11 @@ namespace sizingservers.beholderv2.agent.linux {
 
             var properties = new HashSet<PayloadProperty>();
 
-            Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("-S")["System"];
-            properties.Add(new PayloadProperty("Hostname", (col.GetValueOrDefault("Host") + "." + RetrieverProxy.GetDnsDomainName()).ToLowerInvariant(), true));
+            Dictionary<string, string> col = RetrieverHelper.GetInxiInfo("-S")["System"];
+            properties.Add(new PayloadProperty("Hostname", (col.GetValueOrDefault("Host") + "." + RetrieverHelper.GetDnsDomainName()).ToLowerInvariant(), true));
             properties.Add(new PayloadProperty("OS", col.GetValueOrDefault("Distro") + " Kernel " + col.GetValueOrDefault("Kernel")));
 
-            col = RetrieverProxy.GetInxiInfo("-xi")["Network"];
+            col = RetrieverHelper.GetInxiInfo("-xi")["Network"];
             
             var ips = new List<string>();
             foreach (string key in col.Keys)

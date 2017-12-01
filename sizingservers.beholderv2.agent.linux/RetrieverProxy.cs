@@ -1,11 +1,20 @@
-﻿using System;
+﻿/*
+ * 2017 Sizing Servers Lab
+ * University College of West-Flanders, Department GKG
+ * 
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
 namespace sizingservers.beholderv2.agent.linux {
-    internal static class RetrieverProxy {
+    /// <summary>
+    /// Contains a set of functions to help retreive system info.
+    /// </summary>
+    internal static class RetrieverHelper {
         private static string _thisDirectory;
 
         /// <summary>
@@ -18,7 +27,7 @@ namespace sizingservers.beholderv2.agent.linux {
             string output = GetBashStdOutput("dmesg | grep -i 'hypervisor detected:'");
             return output.Trim().Length != 0;
         }
-        static RetrieverProxy() {
+        static RetrieverHelper() {
             _thisDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
             string tempPath = Path.Combine(_thisDirectory, "temp");
@@ -190,10 +199,22 @@ namespace sizingservers.beholderv2.agent.linux {
         }
 
         /// <summary>
-        /// /
+        /// A struct to simplify getting CPU info. 
         /// </summary>
         public struct CpuInfo {
+            /// <summary>
+            /// The count of the same CPUs
+            /// </summary>
+            /// <value>
+            /// The count.
+            /// </value>
             public int Count { get; set; }
+            /// <summary>
+            /// Gets or sets the name.
+            /// </summary>
+            /// <value>
+            /// The name.
+            /// </value>
             public string Name { get; set; }
         }
     }

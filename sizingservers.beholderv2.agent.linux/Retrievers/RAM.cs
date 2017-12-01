@@ -12,7 +12,7 @@ namespace sizingservers.beholderv2.agent.linux {
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
-            Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("-mxx")["Memory"];
+            Dictionary<string, string> col = RetrieverHelper.GetInxiInfo("-mxx")["Memory"];
             HashSet<PayloadProperty> currentProperties = null;
             foreach (string key in col.Keys)
                 if (key.StartsWith("Device")) {
@@ -24,11 +24,11 @@ namespace sizingservers.beholderv2.agent.linux {
                         currentProperties = new HashSet<PayloadProperty>();
 
                         string[] split = value.Split(' ');
-                        currentProperties.Add(new PayloadProperty("Size", split[0], false, "GB"));
+                        currentProperties.Add(new PayloadProperty("Size", long.Parse(split[0]), false, split[1]));
                     }
                     else if (key.EndsWith(" speed")) {
                         string[] split = value.Split(' ');
-                        currentProperties.Add(new PayloadProperty("Speed", split[0], false, "Mhz"));
+                        currentProperties.Add(new PayloadProperty("Speed", long.Parse(split[0]), false, split[1]));
                     }
                     else if (key.EndsWith(" type")) {
                         currentProperties.Add(new PayloadProperty("Type", value));
@@ -37,10 +37,10 @@ namespace sizingservers.beholderv2.agent.linux {
                         currentProperties.Add(new PayloadProperty("Manufacturer", value));
                     }
                     else if (key.EndsWith(" part")) {
-                        currentProperties.Add(new PayloadProperty("PartNumber", value));
+                        currentProperties.Add(new PayloadProperty("Part number", value));
                     }
                     else if (key.EndsWith(" serial")) {
-                        currentProperties.Add(new PayloadProperty("SerialNumber", value, true));
+                        currentProperties.Add(new PayloadProperty("Serial number", value, true));
                     }
                 }
 

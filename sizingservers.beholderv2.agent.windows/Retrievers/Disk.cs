@@ -1,4 +1,10 @@
-﻿using sizingservers.beholderv2.agent.shared;
+﻿/*
+ * 2017 Sizing Servers Lab
+ * University College of West-Flanders, Department GKG
+ * 
+ */
+
+using sizingservers.beholderv2.agent.shared;
 using System.Collections.Generic;
 using System.Management;
 
@@ -18,7 +24,7 @@ namespace sizingservers.beholderv2.agent.windows {
                 cgs.Add(new ComponentGroup("Disk",
                     new PayloadProperty[] {
                         new PayloadProperty("Model", mo["Model"]),
-                        new PayloadProperty("SerialNumber", mo["SerialNumber"], true)
+                        new PayloadProperty("Serial number", mo["SerialNumber"], true)
                     })
                 );
 

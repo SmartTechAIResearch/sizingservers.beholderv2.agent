@@ -1,14 +1,30 @@
-﻿using sizingservers.beholderv2.agent.shared;
+﻿/*
+ * 2017 Sizing Servers Lab
+ * University College of West-Flanders, Department GKG
+ * 
+ */
+
+using sizingservers.beholderv2.agent.shared;
 using System.Collections.Generic;
 
 namespace sizingservers.beholderv2.agent.linux {
+    /// <summary>
+    /// Retreive all sytem info.
+    /// </summary>
+    /// <seealso cref="sizingservers.beholderv2.agent.shared.IPayloadRetriever" />
     internal class PayloadRetriever : IPayloadRetriever {
         public static PayloadRetriever _instance = new PayloadRetriever();
-
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
+        /// <returns></returns>
         public static PayloadRetriever GetInstance() { return _instance; }
 
         private PayloadRetriever() { }
-
+        /// <summary>
+        /// Retreive all sytem info.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new List<ComponentGroup>();
 

@@ -6,11 +6,10 @@
 
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
 
 namespace sizingservers.beholderv2.agent.shared {
     /// <summary>
@@ -21,42 +20,36 @@ namespace sizingservers.beholderv2.agent.shared {
         private static IPayloadRetriever _retriever;
 
         private static HttpClient _httpClient = new HttpClient();
-
+        /// <summary>
+        /// Registers the retriever and start reporting.
+        /// </summary>
+        /// <param name="retriever">The retriever.</param>
         public static void RegisterRetrieverAndStartReporting(IPayloadRetriever retriever) {
             _retriever = retriever;
             _reportTimer = new Timer(_reportTimer_Callback, null, 0, Config.GetInstance().reportEveryXMinutes * 60 * 1000);
         }
         async static void _reportTimer_Callback(object state) {
-            try {
-                if (_retriever == null) return;
+            while (true)
+                try {
+                    ComponentGroup[] report = _retriever.Retrieve().ToArray();
 
-                ComponentGroup[] report = null;
+                    string json = JsonConvert.SerializeObject(report);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                for (int i = 0; ;)
-                    try {
-                        report = _retriever.Retrieve().ToArray();
-                        break;
-                    }
-                    catch {
-                        if (++i == 3) throw;
-                        Task.Delay(i * 100).Wait();
-                    }
+                    Console.WriteLine(DateTime.Now.ToString("yyyy\"-\"MM\"-\"dd\" \"HH\":\"mm\":\"ss") + " - Reporting: " + json);
+                    Console.WriteLine();
 
-                string json = JsonConvert.SerializeObject(report);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                Console.WriteLine(DateTime.Now.ToString("yyyy\"-\"MM\"-\"dd\" \"HH\":\"mm\":\"ss") + " - Reporting: " + json);
-                Console.WriteLine();
-
-                await _httpClient.PostAsync(Config.GetInstance().endpoint + "/api/report?apiKey=" + Config.GetInstance().apiKey, content);
-            }
-            catch (Exception ex) {
-                ConsoleColor c = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(DateTime.Now.ToString("yyyy\"-\"MM\"-\"dd\" \"HH\":\"mm\":\"ss") + " - Failed:\n" + ex);
-                Console.WriteLine();
-                Console.ForegroundColor = c;
-            }
+                    await _httpClient.PostAsync(Config.GetInstance().endpoint + "/api/report?apiKey=" + Config.GetInstance().apiKey, content);
+                    break;
+                }
+                catch (Exception ex) {
+                    ConsoleColor c = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(DateTime.Now.ToString("yyyy\"-\"MM\"-\"dd\" \"HH\":\"mm\":\"ss") + " - Failed:\n" + ex);
+                    Console.WriteLine();
+                    Console.ForegroundColor = c;
+                    Thread.Sleep(1000);
+                }
         }
     }
 }

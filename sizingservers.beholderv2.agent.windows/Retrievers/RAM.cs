@@ -1,4 +1,10 @@
-﻿using sizingservers.beholderv2.agent.shared;
+﻿/*
+ * 2017 Sizing Servers Lab
+ * University College of West-Flanders, Department GKG
+ * 
+ */
+
+using sizingservers.beholderv2.agent.shared;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Management;
@@ -59,10 +65,10 @@ namespace sizingservers.beholderv2.agent.windows {
                     new PayloadProperty[] {
                         new PayloadProperty("Size", long.Parse(mo["Capacity"].ToString()) / (1024*1024*1024), false, "GB"),
                         new PayloadProperty("Manufacturer", mo["Manufacturer"]),
-                        new PayloadProperty("PartNumber", mo["PartNumber"]),
-                        new PayloadProperty("SerialNumber", mo["SerialNumber"], true),
+                        new PayloadProperty("Part number", mo["PartNumber"]),
+                        new PayloadProperty("Serial number", mo["SerialNumber"], true),
                         new PayloadProperty("Type", memoryType),
-                        new PayloadProperty("Speed", mo["Speed"], false, "Mhz"),
+                        new PayloadProperty("Speed", long.Parse(mo["Speed"].ToString()), false, "Mhz"),
                     })
                 );
             }

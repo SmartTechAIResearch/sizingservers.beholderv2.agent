@@ -1,0 +1,12 @@
+Baseboard
+	Manufacturer, Model, Serial number (unique), BIOS
+CPU
+	Name
+Disk
+	Model, Serial number (unique)
+Machine
+	Hostname (unique), IPs (array), OS
+NIC
+	Name, MAC address (unique)
+RAM
+	Size (long, GB), Manufacturer, Part number, Serial number (unique), Type, Speed (long, Mhz)

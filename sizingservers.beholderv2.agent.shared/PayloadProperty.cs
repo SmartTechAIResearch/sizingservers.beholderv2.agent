@@ -1,4 +1,10 @@
-﻿using SizingServers.Util;
+﻿/*
+ * 2017 Sizing Servers Lab
+ * University College of West-Flanders, Department GKG
+ * 
+ */
+
+using SizingServers.Util;
 using System;
 using System.Collections;
 using System.Diagnostics;
@@ -6,14 +12,34 @@ using System.Text;
 
 namespace sizingservers.beholderv2.agent.shared {
     /// <summary>
-    /// Made because we want to easily extend the hardware info we can get.
+    /// Describes a property of a piece of hardware / component group.
     /// </summary>
     [DebuggerDisplay("Type = {Type}, Name = {Name}, Value = {Value}, UniqueId = {UniqueId}, Unit = {Unit}")]
     public class PayloadProperty {
+        /// <summary>
+        /// 
+        /// </summary>
         public enum PayloadType { Collection, String, Long, Double, Boolean }
-
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>
+        /// The type.
+        /// </value>
         public string Type { get; set; }
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
         public string Name { get; set; }
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>
+        /// The value.
+        /// </value>
         public string Value { get; set; }
         /// <summary>
         /// When matching hardware (ComponentGroups) as it moves around, this property is used as a sole identifier if this is true, except if it is null or empty. The other fields are disregarded. This is handy for, for instance a disk moves from Linux to Windows, the model name is formatted differently, but the serial number stays the same.
@@ -22,6 +48,12 @@ namespace sizingservers.beholderv2.agent.shared {
         ///   <c>true</c> if [unique identifier]; otherwise, <c>false</c>.
         /// </value>
         public bool UniqueId { get; set; }
+        /// <summary>
+        /// Gets or sets the unit.
+        /// </summary>
+        /// <value>
+        /// The unit.
+        /// </value>
         public string Unit { get; set; }
 
         /// <summary>

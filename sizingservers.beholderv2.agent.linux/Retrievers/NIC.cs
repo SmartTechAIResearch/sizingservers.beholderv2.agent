@@ -13,7 +13,7 @@ namespace sizingservers.beholderv2.agent.linux {
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
-            Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("-n")["Network"];
+            Dictionary<string, string> col = RetrieverHelper.GetInxiInfo("-n")["Network"];
             HashSet<PayloadProperty> currentProperties = null;
             foreach (string key in col.Keys)
                 if (key.StartsWith("Card") && !key.EndsWith(" driver")) {
@@ -21,7 +21,7 @@ namespace sizingservers.beholderv2.agent.linux {
                     currentProperties.Add(new PayloadProperty("Name", col.GetValueOrDefault(key)));
                 }
                 else if (key.StartsWith("IF") && key.EndsWith(" mac")) {
-                    currentProperties.Add(new PayloadProperty("MAC address", ("" + col.GetValueOrDefault(key)).ToUpperInvariant()));
+                    currentProperties.Add(new PayloadProperty("MAC address", ("" + col.GetValueOrDefault(key)).ToUpperInvariant(), true));
                     cgs.Add(new ComponentGroup("NIC", currentProperties.ToArray())); //Can be spoofed, do not run in a VM!
                 }
 

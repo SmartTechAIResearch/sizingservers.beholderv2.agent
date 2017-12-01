@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ * 2017 Sizing Servers Lab
+ * University College of West-Flanders, Department GKG
+ * 
+ */
+
+using System;
 using System.Collections.Concurrent;
 using System.Management;
 

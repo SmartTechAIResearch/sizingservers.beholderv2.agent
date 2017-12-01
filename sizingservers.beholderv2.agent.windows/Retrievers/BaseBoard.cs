@@ -1,4 +1,10 @@
-﻿using sizingservers.beholderv2.agent.shared;
+﻿/*
+ * 2017 Sizing Servers Lab
+ * University College of West-Flanders, Department GKG
+ * 
+ */
+
+using sizingservers.beholderv2.agent.shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
@@ -20,7 +26,7 @@ namespace sizingservers.beholderv2.agent.windows {
             foreach (ManagementObject mo in col) {
                 properties.Add(new PayloadProperty("Manufacturer", mo["Manufacturer"]));
                 properties.Add(new PayloadProperty("Model", mo["Product"]));
-                properties.Add(new PayloadProperty("SerialNumber", mo["SerialNumber"], true));
+                properties.Add(new PayloadProperty("Serial number", mo["SerialNumber"], true));
             }
             col = RetrieverProxy.GetWmiInfo("Select Name from Win32_BIOS WHERE PrimaryBIOS='True'");
             foreach (ManagementObject mo in col)

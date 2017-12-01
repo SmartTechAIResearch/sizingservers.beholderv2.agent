@@ -13,7 +13,7 @@ namespace sizingservers.beholderv2.agent.linux {
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
-            Dictionary<string, string> col = RetrieverProxy.GetInxiInfo("-D -xx")["Drives"];
+            Dictionary<string, string> col = RetrieverHelper.GetInxiInfo("-D -xx")["Drives"];
             HashSet<PayloadProperty> currentProperties = null;
             foreach (string key in col.Keys)
                 if (key.StartsWith("ID")) {
@@ -22,7 +22,7 @@ namespace sizingservers.beholderv2.agent.linux {
                         currentProperties.Add(new PayloadProperty("Model", col.GetValueOrDefault(key)));
                     }
                     else if (key.EndsWith(" serial")) {
-                        currentProperties.Add(new PayloadProperty("SerialNumber", col.GetValueOrDefault(key), true));
+                        currentProperties.Add(new PayloadProperty("Serial number", col.GetValueOrDefault(key), true));
 
                         cgs.Add(new ComponentGroup("Disk", currentProperties.ToArray()));
                     }

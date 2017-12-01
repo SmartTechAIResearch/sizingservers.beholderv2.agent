@@ -20,9 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="DAEMONREADME.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="inxi 2017-01-14 License.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
