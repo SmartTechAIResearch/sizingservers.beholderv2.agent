@@ -61,7 +61,7 @@ namespace sizingservers.beholderv2.agent.shared {
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="name">The name.</param>
-        /// <param name="value">The value. The "ToString()" is stored. Or if it is an IEnumerable it will be serialized as { + \"x0\", ..., \"xn\" + } (only single level collections are handled correctly).</param>
+        /// <param name="value">The value. The "ToString()" is stored. OOr if it is an IEnumerable it will be serialized as x0\t ...\t xn\ with the PayloadType String (only single level collections are handled correctly).</param>
         /// <param name="uniqueId">When matching hardware (ComponentGroups) as it moves around, this property is used as a sole identifier if this is true, except if it is null or empty. The other fields are disregarded. This is handy for, for instance a disk moves from Linux to Windows, the model name is formatted differently, but the serial number stays the same.</param>
         /// <param name="unit">%, GB, empty string,... cannot be null</param>
         public PayloadProperty(string name, object value, bool uniqueId = false, string unit = "") {
@@ -75,7 +75,7 @@ namespace sizingservers.beholderv2.agent.shared {
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="name">The name.</param>
-        /// <param name="value">The value. The "ToString()" is stored. Or if it is an IEnumerable it will be serialized as { + \"x0\", ..., \"xn\" + } (only single level collections are handled correctly).</param>
+        /// <param name="value">The value. The "ToString()" is stored. Or if it is an IEnumerable it will be serialized as x0\t ...\t xn\ with the PayloadType String (only single level collections are handled correctly).</param>
         /// <param name="uniqueId">When matching hardware (ComponentGroups) as it moves around, this property is used as a sole identifier if this is true. The other fields are disregarded. This is handy for, for instance a disk moves from Linux to Windows, the model name is formatted differently, but the serial number stays the same.</param>
         /// <param name="unit">%, GB, empty string,... cannot be null</param>
         private PayloadProperty(string type, string name, string value, bool uniqueId, string unit) {
@@ -91,54 +91,61 @@ namespace sizingservers.beholderv2.agent.shared {
         /// <param name="type">Type of the payload.</param>
         public void SetType(PayloadType type) { Type = Enum.GetName(typeof(PayloadType), type); }
         /// <summary>
-        /// Sets the value. The "ToString()" is stored. Or if it is an IEnumerable it will be serialized as { + \"x0\", ..., \"xn\" + } (only single level collections are handled correctly).
+        /// Sets the value. The "ToString()" is stored. Or if it is an IEnumerable it will be serialized as x0\t ...\t xn\ with the PayloadType String (only single level collections are handled correctly).
         /// </summary>
         /// <param name="value">The value.</param>
         public void SetValue(object value) {
             if (value == null) value = "";
 
-            if (value is string) {
-                SetType(PayloadType.String);
-                Value = value.ToString();
-            }
-            else if (value is IEnumerable) {
+            if (value is IEnumerable) {
                 SetType(PayloadType.Collection);
                 var enumerator = (value as IEnumerable).GetEnumerator();
                 enumerator.Reset();
 
                 var sb = new StringBuilder();
-                sb.Append("{");
-                long i = 0;
+                bool firstItem = true;
                 while (enumerator.MoveNext()) {
-                    if (i++ != 0) sb.Append(",");
-                    sb.Append("\"");
-                    sb.Append(enumerator.Current.ToString().Replace("\"", "\\\""));
-                    sb.Append("\"");
+                    if (firstItem) {
+                        firstItem = false;
+                        sb.Append("\t");
+                    }
+                    sb.Append(ToString(enumerator));
                 }
-                sb.Append("}");
+
                 Value = sb.ToString();
             }
-            else if (value is float) {
-                SetType(PayloadType.Double);
-                StringUtil.FloatToLongString((float)value);
-            }
-            else if (value is double) {
-                SetType(PayloadType.Double);
-                StringUtil.DoubleToLongString((double)value);
-            }
-            else if (value is decimal) {
-                SetType(PayloadType.Double);
-                StringUtil.DecimalToLongString((decimal)value);
-            }
-            else if (value is short || value is ushort || value is int || value is uint || value is long || value is ulong) {
-                SetType(PayloadType.Long);
-                Value = value.ToString();
-            }
-            else if (value is bool) {
-                SetType(PayloadType.Boolean);
-                Value = value.ToString();
+            else {
+                if (value is string)
+                    SetType(PayloadType.String);
+                else if (value is float || value is double || value is decimal)
+                    SetType(PayloadType.Double);
+                else if (value is short || value is ushort || value is int || value is uint || value is long || value is ulong)
+                    SetType(PayloadType.Long);
+                else if (value is bool)
+                    SetType(PayloadType.Boolean);
+
+                Value = ToString(value);
             }
         }
+
+        /// <summary>
+        /// Returns a correctly formatted <see cref="System.String" />, no scientific notation.
+        /// </summary>
+        /// <param name="singleValue">A single value, no IEnumerable.</param>
+        /// <returns>
+        /// A correctly formatted <see cref="System.String" />, no scientific notation.
+        /// </returns>
+        private string ToString(object singleValue) {
+            if (singleValue is float)
+                return StringUtil.FloatToLongString((float)singleValue);
+            else if (singleValue is double)
+                return StringUtil.DoubleToLongString((double)singleValue);
+            else if (singleValue is decimal)
+                return StringUtil.DecimalToLongString((decimal)singleValue);
+
+            return singleValue.ToString();
+        }
+
         /// <summary>
         /// Clones this instance.
         /// </summary>
