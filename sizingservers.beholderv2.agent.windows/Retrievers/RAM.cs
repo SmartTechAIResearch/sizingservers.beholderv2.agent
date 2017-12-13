@@ -55,7 +55,7 @@ namespace sizingservers.beholderv2.agent.windows {
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
-            ManagementObjectCollection col = RetrieverProxy.GetWmiInfo("Select * from Win32_PhysicalMemory");
+            ManagementObjectCollection col = RetrieverHelper.GetWmiInfo("Select * from Win32_PhysicalMemory");
             foreach (ManagementObject mo in col) {
                 string memoryType;
                 if (!_memoryTypes.TryGetValue(long.Parse(mo["MemoryType"].ToString()), out memoryType))

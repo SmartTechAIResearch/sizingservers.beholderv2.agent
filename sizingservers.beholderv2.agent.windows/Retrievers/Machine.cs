@@ -18,24 +18,24 @@ namespace sizingservers.beholderv2.agent.windows {
 
             string hostname = "";
 
-            ManagementObjectCollection col = RetrieverProxy.GetWmiInfo("Select CSName from Win32_OperatingSystem");
+            ManagementObjectCollection col = RetrieverHelper.GetWmiInfo("Select CSName from Win32_OperatingSystem");
             foreach (ManagementObject mo in col) 
                 hostname = mo["CSName"].ToString();
             
-            col = RetrieverProxy.GetWmiInfo("Select Domain from Win32_ComputerSystem");
+            col = RetrieverHelper.GetWmiInfo("Select Domain from Win32_ComputerSystem");
             foreach (ManagementObject mo in col) {
                 hostname += "." + mo["Domain"];
                 properties.Add(new PayloadProperty("Hostname", hostname.ToLowerInvariant(), true));
             }
 
-            col = RetrieverProxy.GetWmiInfo("Select IPAddress from Win32_NetworkAdapterConfiguration where IPEnabled='True'");
+            col = RetrieverHelper.GetWmiInfo("Select IPAddress from Win32_NetworkAdapterConfiguration where IPEnabled='True'");
             var ips = new List<string>();
             foreach (ManagementObject mo in col)
                 foreach (string ip in mo["IPAddress"] as string[]) ips.Add(ip);
 
             properties.Add(new PayloadProperty("IPs", ips));
 
-            col = RetrieverProxy.GetWmiInfo("Select Version, Name, BuildNumber from Win32_OperatingSystem");
+            col = RetrieverHelper.GetWmiInfo("Select Version, Name, BuildNumber from Win32_OperatingSystem");
             foreach (ManagementObject mo in col) {
                 properties.Add(new PayloadProperty("OS",
                     string.Format("{0} {1} Build {2}", mo["Name"].ToString().Split("|".ToCharArray())[0], mo["Version"], mo["BuildNumber"])));

@@ -97,7 +97,25 @@ namespace sizingservers.beholderv2.agent.shared {
         public void SetValue(object value) {
             if (value == null) value = "";
 
-            if (value is IEnumerable) {
+            bool set = false;
+            if (value is string) {
+                SetType(PayloadType.String);
+                set = true;
+            }
+            else if (value is float || value is double || value is decimal) {
+                SetType(PayloadType.Double);
+                set = true;
+            }
+            else if (value is short || value is ushort || value is int || value is uint || value is long || value is ulong) {
+                SetType(PayloadType.Long);
+                set = true;
+            }
+            else if (value is bool) {
+                SetType(PayloadType.Boolean);
+                set = true;
+            }
+
+            if (!set && value is IEnumerable) {
                 SetType(PayloadType.Collection);
                 var enumerator = (value as IEnumerable).GetEnumerator();
                 enumerator.Reset();
@@ -105,27 +123,19 @@ namespace sizingservers.beholderv2.agent.shared {
                 var sb = new StringBuilder();
                 bool firstItem = true;
                 while (enumerator.MoveNext()) {
-                    if (firstItem) {
+                    if (firstItem)
                         firstItem = false;
+                    else
                         sb.Append("\t");
-                    }
-                    sb.Append(ToString(enumerator));
+
+                    sb.Append(ToString(enumerator.Current));
                 }
 
                 Value = sb.ToString();
+                return;
             }
-            else {
-                if (value is string)
-                    SetType(PayloadType.String);
-                else if (value is float || value is double || value is decimal)
-                    SetType(PayloadType.Double);
-                else if (value is short || value is ushort || value is int || value is uint || value is long || value is ulong)
-                    SetType(PayloadType.Long);
-                else if (value is bool)
-                    SetType(PayloadType.Boolean);
 
-                Value = ToString(value);
-            }
+            Value = ToString(value);
         }
 
         /// <summary>

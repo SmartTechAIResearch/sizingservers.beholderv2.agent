@@ -19,7 +19,7 @@ namespace sizingservers.beholderv2.agent.windows {
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
-            ManagementObjectCollection col = RetrieverProxy.GetWmiInfo("Select Name from Win32_Processor");
+            ManagementObjectCollection col = RetrieverHelper.GetWmiInfo("Select Name from Win32_Processor");
             foreach (ManagementObject mo in col)
                 cgs.Add(new ComponentGroup("CPU",
                     new PayloadProperty[] { new PayloadProperty("Name", mo["Name"]) })

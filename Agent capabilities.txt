@@ -5,7 +5,7 @@ CPU
 Disk
 	Model, Serial number (unique)
 Machine
-	Hostname (unique), IPs (array), OS
+	Hostname (unique), IPs (array), BMC IP, OS
 NIC
 	Name, MAC address (unique)
 RAM

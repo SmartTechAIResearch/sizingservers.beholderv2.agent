@@ -21,12 +21,12 @@ namespace sizingservers.beholderv2.agent.windows {
             var cgs = new HashSet<ComponentGroup>();
 
             ManagementObjectCollection col =
-                RetrieverProxy.GetWmiInfo("SELECT InterfaceGuid, DriverDescription FROM MSFT_NetAdapter WHERE HardwareInterface = 'True' AND EndpointInterface = 'False'",
+                RetrieverHelper.GetWmiInfo("SELECT InterfaceGuid, DriverDescription FROM MSFT_NetAdapter WHERE HardwareInterface = 'True' AND EndpointInterface = 'False'",
                 "root\\StandardCimv2");
             foreach (ManagementObject mo in col) {
                 string macAddress = "";
 
-                var col2 = RetrieverProxy.GetWmiInfo("SELECT MACAddress FROM Win32_NetworkAdapterConfiguration WHERE SettingID = '" + mo["InterfaceGuid"] + "'");
+                var col2 = RetrieverHelper.GetWmiInfo("SELECT MACAddress FROM Win32_NetworkAdapterConfiguration WHERE SettingID = '" + mo["InterfaceGuid"] + "'");
                 foreach (var mo2 in col2) macAddress = mo2["MACAddress"].ToString().ToUpperInvariant();
 
                 cgs.Add(new ComponentGroup("NIC",

@@ -12,7 +12,7 @@ namespace sizingservers.beholderv2.agent.windows {
     /// <summary>
     /// Caches the ManagementScopes.
     /// </summary>
-    internal static class RetrieverProxy {
+    internal static class RetrieverHelper {
         private static ConcurrentDictionary<string, ManagementScope> _connectedScopes = new ConcurrentDictionary<string, ManagementScope>();
 
         /// <summary>

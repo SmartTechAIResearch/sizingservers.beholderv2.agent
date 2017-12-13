@@ -8,11 +8,13 @@ This project is part of a computer hardware inventorization solution, together w
 
 Agents are installed on the computers you want to inventorize. These communicate with the REST API which stores hardware info. The front-end app visualizes that info.
 
-You need the .NET core runtime (<https://www.microsoft.com/net/download/core#/runtime>) to run the build: 1.1.2 at the time of writing.
+You need the .NET core SDK (<https://www.microsoft.com/net/download/core#/runtime>) to run the build: 2.0.3 at the time of writing.
 
-You need the .NET framework on Windows, but you have that by default.
+You need the .NET Framework 4.7 on Windows.
+
+You need inxi and ipmitool on Linux. Install via apt on Ubuntu.
 
 Execute run.cmd or run.sh.
 
 BETTER is to run the Linux- or Windows agent as a service.
-For that you need to use either the start script for Linux or NSSM for Windows in the Linux or the Windows folder.
+For that you need to use either screen (or another tool) for Linux or NSSM for Windows (see the Windows folder).

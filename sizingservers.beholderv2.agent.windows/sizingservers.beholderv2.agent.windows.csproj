@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RetrieverProxy.cs" />
+    <Compile Include="RetrieverHelper.cs" />
     <Compile Include="PayloadRetriever.cs" />
     <Compile Include="Retrievers\BaseBoard.cs" />
     <Compile Include="Retrievers\CPU.cs" />

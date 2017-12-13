@@ -48,12 +48,20 @@ namespace sizingservers.beholderv2.agent.linux {
         /// </summary>
         /// <returns></returns>
         public static CpuInfo GetCpuInfo() {
-            string[] output = GetBashStdOutput("lscpu | egrep 'Socket(s):|Model name:'").Split('\n');
+            string[] output = GetBashStdOutput("lscpu | egrep 'Socket|Model name:'").Trim().Split('\n');
 
             return new CpuInfo() {
                 Count = int.Parse(output[0].Split(':')[1].Trim()),
                 Name = output[1].Split(':')[1].Trim()
             };
+        }
+        /// <summary>
+        /// Gets the IP Address of the BMC.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetBMCIP() {
+            string output = GetBashStdOutput("ipmitool lan print | grep -i 'ip address' | grep -vi 'source'");
+            return output.Substring(output.IndexOf(':') + 1).Trim();
         }
         private static string GetBashStdOutput(string command) {
             var startInfo = new ProcessStartInfo("/bin/bash") {

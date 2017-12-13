@@ -19,7 +19,7 @@ namespace sizingservers.beholderv2.agent.windows {
         public IEnumerable<ComponentGroup> Retrieve() {
             var cgs = new HashSet<ComponentGroup>();
 
-            ManagementObjectCollection col = RetrieverProxy.GetWmiInfo("Select Model, SerialNumber from Win32_DiskDrive where InterfaceType != 'USB'");
+            ManagementObjectCollection col = RetrieverHelper.GetWmiInfo("Select Model, SerialNumber from Win32_DiskDrive where InterfaceType != 'USB'");
             foreach (ManagementObject mo in col)
                 cgs.Add(new ComponentGroup("Disk",
                     new PayloadProperty[] {

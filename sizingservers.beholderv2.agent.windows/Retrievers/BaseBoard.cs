@@ -22,13 +22,13 @@ namespace sizingservers.beholderv2.agent.windows {
 
             var properties = new HashSet<PayloadProperty>();
 
-            ManagementObjectCollection col = RetrieverProxy.GetWmiInfo("Select Manufacturer, Product, SerialNumber from Win32_BaseBoard"); //Version?
+            ManagementObjectCollection col = RetrieverHelper.GetWmiInfo("Select Manufacturer, Product, SerialNumber from Win32_BaseBoard"); //Version?
             foreach (ManagementObject mo in col) {
                 properties.Add(new PayloadProperty("Manufacturer", mo["Manufacturer"]));
                 properties.Add(new PayloadProperty("Model", mo["Product"]));
                 properties.Add(new PayloadProperty("Serial number", mo["SerialNumber"], true));
             }
-            col = RetrieverProxy.GetWmiInfo("Select Name from Win32_BIOS WHERE PrimaryBIOS='True'");
+            col = RetrieverHelper.GetWmiInfo("Select Name from Win32_BIOS WHERE PrimaryBIOS='True'");
             foreach (ManagementObject mo in col)
                 properties.Add(new PayloadProperty("BIOS", mo["Name"]));
 

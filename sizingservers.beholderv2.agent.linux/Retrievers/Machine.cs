@@ -28,6 +28,8 @@ namespace sizingservers.beholderv2.agent.linux {
 
             properties.Add(new PayloadProperty("IPs", ips));
 
+            properties.Add(new PayloadProperty("BMC IP", RetrieverHelper.GetBMCIP()));
+
             cgs[0].Properties = properties.ToArray();
 
             return cgs;
