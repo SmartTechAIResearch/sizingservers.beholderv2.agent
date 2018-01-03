@@ -35,6 +35,8 @@ namespace sizingservers.beholderv2.agent.windows {
 
             properties.Add(new PayloadProperty("IPs", ips));
 
+            properties.Add(new PayloadProperty("BMC IP", RetrieverHelper.GetBMCIP()));
+
             col = RetrieverHelper.GetWmiInfo("Select Version, Name, BuildNumber from Win32_OperatingSystem");
             foreach (ManagementObject mo in col) {
                 properties.Add(new PayloadProperty("OS",

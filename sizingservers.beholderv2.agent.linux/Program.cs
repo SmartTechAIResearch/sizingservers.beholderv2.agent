@@ -19,8 +19,6 @@ namespace sizingservers.beholderv2.agent.linux {
             Console.WriteLine("  Reporting every " + Config.GetInstance().reportEvery + " to " + Config.GetInstance().endpoint);
             Console.WriteLine();
 
-            Console.ReadLine();
-
             if (RetrieverHelper.IsVM()) {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Beholder does not work for VMs!");
