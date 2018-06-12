@@ -9,6 +9,10 @@ using System;
 using System.Collections.Generic;
 
 namespace sizingservers.beholderv2.agent.windows {
+    /// <summary>
+    /// Retrieve all sytem info.
+    /// </summary>
+    /// <seealso cref="sizingservers.beholderv2.agent.shared.IPayloadRetriever" />
     internal class PayloadRetriever : IPayloadRetriever {
         private static PayloadRetriever _instance = new PayloadRetriever();
         /// <summary>
@@ -19,7 +23,7 @@ namespace sizingservers.beholderv2.agent.windows {
 
         private PayloadRetriever() { }
         /// <summary>
-        /// Retrieves system info.
+        /// Retrieve all system info.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<ComponentGroup> Retrieve() {
@@ -31,7 +35,7 @@ namespace sizingservers.beholderv2.agent.windows {
             try { cgs.AddRange(RAM.GetInstance().Retrieve()); } catch (Exception ex) { LogToConsole.Error(ex); }
             try { cgs.AddRange(Disk.GetInstance().Retrieve()); } catch (Exception ex) { LogToConsole.Error(ex); }
             try { cgs.AddRange(NIC.GetInstance().Retrieve()); } catch (Exception ex) { LogToConsole.Error(ex); }
-
+            
             return ComponentGroupConsolidator.Do(cgs);
         }
     }

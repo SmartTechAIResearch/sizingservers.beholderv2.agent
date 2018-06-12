@@ -72,5 +72,6 @@
       <Name>sizingservers.beholderv2.agent.shared</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

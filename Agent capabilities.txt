@@ -10,3 +10,6 @@ NIC
 	Name, MAC address (unique)
 RAM
 	Size (long, GB), Manufacturer, Part number, Serial number (unique), Type, Speed (long, Mhz)
+	
+Host
+    All of the above if the machine is a vmware VM and the vmware tools are installed
