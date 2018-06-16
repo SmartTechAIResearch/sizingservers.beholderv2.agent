@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace sizingservers.beholderv2.agent.linux {
     /// <summary>
-    /// Retrieve all sytem info.
+    /// Retreive all sytem info.
     /// </summary>
     /// <seealso cref="sizingservers.beholderv2.agent.shared.IPayloadRetriever" />
     internal class PayloadRetriever : IPayloadRetriever {
@@ -23,7 +23,7 @@ namespace sizingservers.beholderv2.agent.linux {
 
         private PayloadRetriever() { }
         /// <summary>
-        /// Retrieve all system info.
+        /// Retreive all sytem info.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<ComponentGroup> Retrieve() {

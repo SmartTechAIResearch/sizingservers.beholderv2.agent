@@ -1,10 +1,4 @@
-﻿/*
- * 2017 Sizing Servers Lab
- * University College of West-Flanders, Department GKG
- * 
- */
-
-using sizingservers.beholderv2.agent.shared;
+﻿using sizingservers.beholderv2.agent.shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
